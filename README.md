@@ -1,15 +1,15 @@
 
-# Cocktail
-## Cocktail recipe browser and screensaver for Kodi
+# TheMealDB
+## Meal recipe browser and screensaver for Kodi
 
-![Screenshot program](https://raw.githubusercontent.com/enen92/script.screensaver.cocktail/master/icon.png)
+![Screenshot program](https://raw.githubusercontent.com/zag2me/script.screensaver.themealdb/master/icon.png)
 
-This addon let you browse dozens of cocktail recipes, filter by type, glass, alcohol percentage, ingredient and even search youtube videos.
+This addon let you browse dozens of meal recipes, filter by type, area, ingredient and even search youtube videos.
 It also includes an interactive screensaver to display random drinks, switch drinks and search specific recipes.
 
-Powered by http://www.thecocktaildb.com
+Powered by http://www.themealdb.com
 
-* [Forum url](http://forum.kodi.tv/showthread.php?tid=235298)
+* [Forum url] coming soon...
 
 Textures from script.extendedinfo (by phil)
 
@@ -17,20 +17,13 @@ Textures from script.extendedinfo (by phil)
 
 Program
 
-![Screenshot program](http://i.imgur.com/9RHdee1.png)
-![Screenshot program](http://i.imgur.com/1Ef89Oo.png)
-![Screenshot program](http://i.imgur.com/7qX223t.png)
-![Screenshot program](http://i.imgur.com/3DuOSo3.png)
-![Screenshot program](http://i.imgur.com/KFtlbxr.png)
-![Screenshot program](http://i.imgur.com/5vyptIs.png)
-![Screenshot program](http://i.imgur.com/8igy2qR.png)
-![Screenshot program](http://i.imgur.com/fX2oUtl.png)
-![Screenshot program](http://i.imgur.com/oixP2r7.png)
-![Screenshot program](http://i.imgur.com/BgTsltT.png)
-![Screenshot program](http://i.imgur.com/0HaOtxa.png)
-![Screenshot program](http://i.imgur.com/YqH3naO.png)
+![Screenshot program](http://www.themealdb.com/images/github/screenshot-01.jpg)
+![Screenshot program](http://www.themealdb.com/images/github/screenshot-02.jpg)
+![Screenshot program](http://www.themealdb.com/images/github/screenshot-04.jpg)
+![Screenshot program](http://www.themealdb.com/images/github/screenshot-05.jpg)
+![Screenshot program](http://www.themealdb.com/images/github/screenshot-06.jpg)
+
 
 Screensaver
 
-![Screenshot screensaver](http://i.imgur.com/TQ45rZs.png)
-![Screenshot screensaver](http://i.imgur.com/dtN7apq.png)
+![Screenshot program](http://www.themealdb.com/images/github/screenshot-03.jpg)
