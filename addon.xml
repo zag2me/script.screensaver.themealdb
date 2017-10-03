@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.screensaver.themealdb" name="TheMealDB" version="1.0.0" provider-name="enen92,Zag">
+<addon id="script.screensaver.themealdb" name="TheMealDB" version="1.0.1" provider-name="enen92,Zag">
 	<requires>
 		<import addon="xbmc.python" version="2.20.0"/>
 	</requires>
@@ -22,7 +22,9 @@
 		    <screenshot>resources/screenshots/screenshot-04.jpg</screenshot>
 		    <screenshot>resources/screenshots/screenshot-05.jpg</screenshot>
 		    <screenshot>resources/screenshots/screenshot-06.jpg</screenshot>
+			<banner>resources/banner.jpg</banner>
+			<logo>resources/logo.png</logo>
 		</assets>
-		<news>- v1.0.0 inital release</news>
+		<news>Here is the latest release of the new recipe Add-on for Kodi. Pop by our site to add new meals at www.themealdb.com or post in the Kodi forum thread</news>
     </extension>
 </addon>

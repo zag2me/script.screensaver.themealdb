@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    script.screensaver.cocktail - A random cocktail recipe screensaver for kodi 
+    script.screensaver.meal - A random meal recipe screensaver for kodi 
     Copyright (C) 2015 enen92,Zag
 
     This program is free software: you can redistribute it and/or modify
@@ -23,18 +23,18 @@ import xbmc
 import sys
 import os
 import urllib
-from resources.lib import thecocktaildb
+from resources.lib import themealdb
 from resources.lib import ingredient_details
-from resources.lib.common_cocktail import *
+from resources.lib.common_meal import *
 
 if addon.getSetting('ingredient-switch') == '0': switch_percentage = 20
 elif addon.getSetting('ingredient-switch') == '1': switch_percentage = 10
 
 #Window controls
-drinklabel = 32603
-drinkthumb = 32602
-drinksublabel = 32604
-drinkrecipe = 32606
+recipelabel = 32603
+recipethumb = 32602
+recipesublabel = 32604
+reciperecipe = 32606
 INGREDIENT_PANEL_CONTROL = 32607
 FICTIONAL_PANEL_CONTROL = 32608
 BACK_BACKGROUND_CONTROL = 32609
@@ -47,7 +47,7 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 		self.mode = args[3]
 		if self.mode:
 			self.screensaver_mode = False
-			self.cocktail_id = str(self.mode)
+			self.meal_id = str(self.mode)
 		else:
 			self.screensaver_mode = True
 	
@@ -58,11 +58,11 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 			self.getControl(BACK_ICON_CONTROL).setVisible(False)
 			
 		#initiate fictional controler
-		ingredient = xbmcgui.ListItem('scipt.screensaver.cocktail')
+		ingredient = xbmcgui.ListItem('scipt.screensaver.meal')
 		self.getControl(FICTIONAL_PANEL_CONTROL).addItem(ingredient)
 	
 	
-		self.drink_id = 0
+		self.recipe_id = 0
 		
 		if self.screensaver_mode:
 			if addon.getSetting('enable-instructions') == 'true':
@@ -83,16 +83,16 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 					if ((float(self.current_time)/next_random)*100) % switch_percentage == 0.0 and ((float(self.current_time)/next_random)*100) != 0.0:
 						if self.position == 0 and self.pages > 1:
 							self.clear_ingredients()
-							self.set_second_ingredients(self.cocktail_obj)
+							self.set_second_ingredients(self.meal_obj)
 						elif self.position == 1:
 							self.clear_ingredients()
 							if self.pages == 3:
-								self.set_third_ingredients(self.cocktail_obj)
+								self.set_third_ingredients(self.meal_obj)
 							else:
-								self.set_first_ingredients(self.cocktail_obj)
+								self.set_first_ingredients(self.meal_obj)
 						elif self.position == 2:
 							self.clear_ingredients()
-							self.set_first_ingredients(self.cocktail_obj)
+							self.set_first_ingredients(self.meal_obj)
 						xbmc.sleep(200)
 						self.current_time += 200
 					else:
@@ -101,10 +101,10 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 						
 		else:
 			xbmc.executebuiltin("SetProperty(loading,1,home)")
-			cocktails_list = cocktailsdb_api.Lookup().cocktail(self.cocktail_id)
+			meals_list = mealsdb_api.Lookup().meal(self.meal_id)
 			xbmc.executebuiltin("ClearProperty(loading,Home)")
-			if cocktails_list:
-				self.set_cocktail(cocktails_list[0])
+			if meals_list:
+				self.set_meal(meals_list[0])
 			else:
 				xbmcgui.Dialog().ok(translate(32000),translate(32011))
 				self.close()
@@ -113,16 +113,16 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 				if ((float(self.current_time)/next_random)*100) % switch_percentage == 0.0 and ((float(self.current_time)/next_random)*100) != 0.0:
 					if self.position == 0 and self.pages > 1:
 						self.clear_ingredients()
-						self.set_second_ingredients(self.cocktail_obj)
+						self.set_second_ingredients(self.meal_obj)
 					elif self.position == 1:
 						self.clear_ingredients()
 						if self.pages == 3:
-							self.set_third_ingredients(self.cocktail_obj)
+							self.set_third_ingredients(self.meal_obj)
 						else:
-							self.set_first_ingredients(self.cocktail_obj)
+							self.set_first_ingredients(self.meal_obj)
 					elif self.position == 2:
 						self.clear_ingredients()
-						self.set_first_ingredients(self.cocktail_obj)
+						self.set_first_ingredients(self.meal_obj)
 					xbmc.sleep(200)
 					self.current_time += 200
 				else:
@@ -132,170 +132,170 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 
 	def set_random(self):
 		xbmc.executebuiltin("SetProperty(loading,1,home)")
-		cocktails_list = cocktailsdb_api.Lookup().random()
+		meals_list = mealsdb_api.Lookup().random()
 		xbmc.sleep(200)
 		xbmc.executebuiltin("ClearProperty(instructions,Home)")
-		if int(cocktails_list[0].id) != self.drink_id:
+		if int(meals_list[0].id) != self.recipe_id:
 			xbmc.sleep(200)
 			xbmc.executebuiltin("ClearProperty(loading,Home)")
-			self.drink_id = int(cocktails_list[0].id)
-			self.set_cocktail(cocktails_list[0])
+			self.recipe_id = int(meals_list[0].id)
+			self.set_meal(meals_list[0])
 		else:	
 			self.set_random()
 		return
 		
-	def set_cocktail(self,cocktail):
-		self.cocktail_obj = cocktail
+	def set_meal(self,meal):
+		self.meal_obj = meal
 		self.pages = 1
 		self.clear_all()
-		self.getControl(drinklabel).setLabel(cocktail.name)
-		if cocktail.thumb: self.getControl(drinkthumb).setImage(cocktail.thumb)
-		else: self.getControl(drinkthumb).setImage(os.path.join(addon_path,"resources","skins","default","media","cocktail.jpg"))
-		self.getControl(drinkrecipe).setText(cocktail.recipe)
-		self.getControl(drinksublabel).setText(cocktail.category + ' - ')
-		self.set_first_ingredients(cocktail)
+		self.getControl(recipelabel).setLabel(meal.name)
+		if meal.thumb: self.getControl(recipethumb).setImage(meal.thumb)
+		else: self.getControl(recipethumb).setImage(os.path.join(addon_path,"resources","skins","default","media","meal.jpg"))
+		self.getControl(reciperecipe).setText(meal.recipe)
+		self.getControl(recipesublabel).setText(meal.category + ' - ')
+		self.set_first_ingredients(meal)
 		return
 		
-	def set_first_ingredients(self,cocktail):
+	def set_first_ingredients(self,meal):
 		self.position = 0
 		
 		ingredient_list = []
 		
-		if cocktail.ingredient1.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient1)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient1))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient1))+'.png')
-			if cocktail.measure1.rstrip(): ingredient.setProperty('measure','('+cocktail.measure1.rstrip()+')')
+		if meal.ingredient1.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient1)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient1))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient1))+'.png')
+			if meal.measure1.rstrip(): ingredient.setProperty('measure','('+meal.measure1.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient2.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient2)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient2))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient2))+'.png')
-			if cocktail.measure2.rstrip(): ingredient.setProperty('measure','('+cocktail.measure2.rstrip()+')')
+		if meal.ingredient2.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient2)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient2))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient2))+'.png')
+			if meal.measure2.rstrip(): ingredient.setProperty('measure','('+meal.measure2.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient3.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient3)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient3))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient3))+'.png')
-			if cocktail.measure3.rstrip(): ingredient.setProperty('measure','('+cocktail.measure3.rstrip()+')')
+		if meal.ingredient3.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient3)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient3))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient3))+'.png')
+			if meal.measure3.rstrip(): ingredient.setProperty('measure','('+meal.measure3.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 		
-		if cocktail.ingredient4.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient4)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient4))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient4))+'.png')
-			if cocktail.measure4.rstrip(): ingredient.setProperty('measure','('+cocktail.measure4.rstrip()+')')
+		if meal.ingredient4.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient4)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient4))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient4))+'.png')
+			if meal.measure4.rstrip(): ingredient.setProperty('measure','('+meal.measure4.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient5.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient5)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient5))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient5))+'.png')
-			if cocktail.measure5.rstrip(): ingredient.setProperty('measure','('+cocktail.measure5.rstrip()+')')
+		if meal.ingredient5.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient5)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient5))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient5))+'.png')
+			if meal.measure5.rstrip(): ingredient.setProperty('measure','('+meal.measure5.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient6.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient6)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient6))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient6))+'.png')
-			if cocktail.measure6.rstrip(): ingredient.setProperty('measure','('+cocktail.measure6.rstrip()+')')
+		if meal.ingredient6.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient6)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient6))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient6))+'.png')
+			if meal.measure6.rstrip(): ingredient.setProperty('measure','('+meal.measure6.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 		
 		
 		self.getControl(INGREDIENT_PANEL_CONTROL).addItems(ingredient_list)
-		if cocktail.ingredient7.rstrip(): self.pages = 2
+		if meal.ingredient7.rstrip(): self.pages = 2
 		return
 	
-	def set_second_ingredients(self,cocktail):
+	def set_second_ingredients(self,meal):
 		self.position = 1
 		
 		ingredient_list = []
 		
-		if cocktail.ingredient7.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient7)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient7))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient7))+'.png')
-			if cocktail.measure7.rstrip(): ingredient.setProperty('measure','('+cocktail.measure7.rstrip()+')')
+		if meal.ingredient7.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient7)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient7))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient7))+'.png')
+			if meal.measure7.rstrip(): ingredient.setProperty('measure','('+meal.measure7.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient8.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient8)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient8))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient8))+'.png')
-			if cocktail.measure8.rstrip(): ingredient.setProperty('measure','('+cocktail.measure8.rstrip()+')')
+		if meal.ingredient8.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient8)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient8))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient8))+'.png')
+			if meal.measure8.rstrip(): ingredient.setProperty('measure','('+meal.measure8.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient9.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient9)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient9))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient9))+'.png')
-			if cocktail.measure9.rstrip(): ingredient.setProperty('measure','('+cocktail.measure9.rstrip()+')')
+		if meal.ingredient9.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient9)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient9))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient9))+'.png')
+			if meal.measure9.rstrip(): ingredient.setProperty('measure','('+meal.measure9.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 		
-		if cocktail.ingredient10.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient10)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient10))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient10))+'.png')
-			if cocktail.measure10.rstrip(): ingredient.setProperty('measure','('+cocktail.measure10.rstrip()+')')
+		if meal.ingredient10.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient10)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient10))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient10))+'.png')
+			if meal.measure10.rstrip(): ingredient.setProperty('measure','('+meal.measure10.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient11.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient11)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient11))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient11))+'.png')
-			if cocktail.measure11.rstrip(): ingredient.setProperty('measure','('+cocktail.measure11.rstrip()+')')
+		if meal.ingredient11.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient11)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient11))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient11))+'.png')
+			if meal.measure11.rstrip(): ingredient.setProperty('measure','('+meal.measure11.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient12.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient12)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient12))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient12))+'.png')
-			if cocktail.measure12.rstrip(): ingredient.setProperty('measure','('+cocktail.measure12.rstrip()+')')
+		if meal.ingredient12.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient12)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient12))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient12))+'.png')
+			if meal.measure12.rstrip(): ingredient.setProperty('measure','('+meal.measure12.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 		
 		
 		self.getControl(INGREDIENT_PANEL_CONTROL).addItems(ingredient_list)
-		if cocktail.ingredient13.rstrip(): self.pages = 3
+		if meal.ingredient13.rstrip(): self.pages = 3
 		return
 		
-	def set_third_ingredients(self,cocktail):
+	def set_third_ingredients(self,meal):
 		self.position = 2
 		
-		if cocktail.ingredient13.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient13)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient13))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient13))+'.png')
-			if cocktail.measure13.rstrip(): ingredient.setProperty('measure','('+cocktail.measure13.rstrip()+')')
+		if meal.ingredient13.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient13)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient13))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient13))+'.png')
+			if meal.measure13.rstrip(): ingredient.setProperty('measure','('+meal.measure13.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient14.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient14)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient14))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient14))+'.png')
-			if cocktail.measure14.rstrip(): ingredient.setProperty('measure','('+cocktail.measure14.rstrip()+')')
+		if meal.ingredient14.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient14)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient14))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient14))+'.png')
+			if meal.measure14.rstrip(): ingredient.setProperty('measure','('+meal.measure14.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 			
-		if cocktail.ingredient15.rstrip():
-			ingredient = xbmcgui.ListItem(cocktail.ingredient15)
-			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient15))+'.png' })
-			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(cocktail.ingredient15))+'.png')
-			if cocktail.measure15.rstrip(): ingredient.setProperty('measure','('+cocktail.measure15.rstrip()+')')
+		if meal.ingredient15.rstrip():
+			ingredient = xbmcgui.ListItem(meal.ingredient15)
+			ingredient.setArt({ 'thumb': 'http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient15))+'.png' })
+			ingredient.setProperty('ingredient_thumb','http://www.themealdb.com/images/ingredients/'+urllib.quote(removeNonAscii(meal.ingredient15))+'.png')
+			if meal.measure15.rstrip(): ingredient.setProperty('measure','('+meal.measure15.rstrip()+')')
 			else: ingredient.setProperty('measure','')
 			ingredient_list.append(ingredient)
 		return
@@ -305,10 +305,10 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 		return
 		
 	def clear_all(self):
-		self.getControl(drinklabel).setLabel('')
-		self.getControl(drinkthumb).setImage('')
-		self.getControl(drinkrecipe).setText('')
-		self.getControl(drinksublabel).setText('')
+		self.getControl(recipelabel).setLabel('')
+		self.getControl(recipethumb).setImage('')
+		self.getControl(reciperecipe).setText('')
+		self.getControl(recipesublabel).setText('')
 		self.clear_ingredients()
 		return
 		
@@ -339,10 +339,10 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 		if action.getId() == ACTION_RIGHT and not xbmc.getCondVisibility("Control.HasFocus("+str(INGREDIENT_PANEL_CONTROL)+")"):
 			if self.position == 0 and self.pages > 1:
 				self.clear_ingredients()
-				self.set_second_ingredients(self.cocktail_obj)
+				self.set_second_ingredients(self.meal_obj)
 			elif self.position == 1 and self.pages > 2:
 				self.clear_ingredients()
-				self.set_third_ingredients(self.cocktail_obj)
+				self.set_third_ingredients(self.meal_obj)
 			else:
 				if self.screensaver_mode:
 					self.current_time = 0
@@ -351,10 +351,10 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 		elif action.getId() == ACTION_LEFT and not xbmc.getCondVisibility("Control.HasFocus("+str(INGREDIENT_PANEL_CONTROL)+")"):
 			if self.position == 2 and self.pages <= 3:
 				self.clear_ingredients()
-				self.set_second_ingredients(self.cocktail_obj)
+				self.set_second_ingredients(self.meal_obj)
 			elif self.position == 1 and self.pages <= 2:
 				self.clear_ingredients()
-				self.set_first_ingredients(self.cocktail_obj)
+				self.set_first_ingredients(self.meal_obj)
 			else:
 				if self.screensaver_mode:
 					self.current_time = 0
@@ -367,18 +367,18 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 				search_parameter = urllib.quote_plus(keyb.getText())
 				if not search_parameter: xbmcgui.Dialog().ok(translate(32000),translate(32010))
 				else:
-					cocktails_list = cocktailsdb_api.Search().cocktail(search_parameter)
-					if not cocktails_list: xbmcgui.Dialog().ok(translate(32000),translate(32011))
+					meals_list = mealsdb_api.Search().meal(search_parameter)
+					if not meals_list: xbmcgui.Dialog().ok(translate(32000),translate(32011))
 					else:
-						cocktails_name = []
-						for cocktail in cocktails_list:
-							cocktails_name.append(cocktail.name)
-						if len(cocktails_name) == 1:
-							self.set_cocktail(cocktails_list[0])
+						meals_name = []
+						for meal in meals_list:
+							meals_name.append(meal.name)
+						if len(meals_name) == 1:
+							self.set_meal(meals_list[0])
 						else:
-							choose = xbmcgui.Dialog().select(translate(32000),cocktails_name)
+							choose = xbmcgui.Dialog().select(translate(32000),meals_name)
 							if choose > -1:
-								self.set_cocktail(cocktails_list[choose])
+								self.set_meal(meals_list[choose])
 							
 		else:
 			if action.getId() != 7:

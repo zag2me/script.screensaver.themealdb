@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    script.screensaver.cocktail - A random cocktail recipe screensaver for kodi 
+    script.screensaver.meal - A random meal recipe screensaver for kodi 
     Copyright (C) 2015 enen92,Zag
 
     This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ import xbmcaddon
 import xbmcgui
 import xbmc
 import os
-from resources.lib.common_cocktail import *
+from resources.lib.common_meal import *
 
 #Window controls
 ingredientlabel = 32609
@@ -44,7 +44,7 @@ class Ingredientdetails(xbmcgui.WindowXMLDialog):
 		self.setIngredientDescription()
 		
 	def setIngredientDescription(self):
-		description = cocktailsdb_api.Search().ingredient(self.ingredient_title)
+		description = mealsdb_api.Search().ingredient(self.ingredient_title)
 		if description:
 			self.getControl(ingredientdescription).setText(description)
 		else:
@@ -58,7 +58,7 @@ class Ingredientdetails(xbmcgui.WindowXMLDialog):
 def start(name,thumb,description):
 	argm = str([name,thumb,description]) 
 	ingrdts = Ingredientdetails(
-		'script-cocktail-ingredientdetails.xml',
+		'script-meal-ingredientdetails.xml',
 		addon_path,
 		'default',
 		argm,

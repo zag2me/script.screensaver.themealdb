@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    script.screensaver.cocktail - A random cocktail recipe screensaver for kodi 
+    script.screensaver.meal - A random meal recipe screensaver for kodi 
     Copyright (C) 2015 enen92,Zag
 
     This program is free software: you can redistribute it and/or modify
@@ -19,18 +19,18 @@
 
 import os
 import xbmc
-import thecocktaildb
-from common_cocktail import *
+import themealdb
+from common_meal import *
 
-def add_to_favourite_drinks(drink_name,drink_id,drink_image):
-	content = drink_name + '|' + str(drink_id) + '|' + drink_image
-	filename = os.path.join(favourite_drinks_folder,str(drink_id)+'.txt')
+def add_to_favourite_recipes(recipe_name,recipe_id,recipe_image):
+	content = recipe_name + '|' + str(recipe_id) + '|' + recipe_image
+	filename = os.path.join(favourite_recipes_folder,str(recipe_id)+'.txt')
 	save(filename,content)
 	xbmc.executebuiltin("Notification(%s,%s,%i,%s)" % (translate(32000), translate(32022),1,os.path.join(addon_path,"icon.png")))
 	return
 	
-def remove_from_favourites(drink_id):
-	filename = os.path.join(favourite_drinks_folder,str(drink_id)+'.txt')
+def remove_from_favourites(recipe_id):
+	filename = os.path.join(favourite_recipes_folder,str(recipe_id)+'.txt')
 	if os.path.exists(filename):
 		os.remove(filename)
 		xbmc.executebuiltin("Notification(%s,%s,%i,%s)" % (translate(32000), translate(32023),1,os.path.join(addon_path,"icon.png")))
@@ -39,34 +39,34 @@ def remove_from_favourites(drink_id):
 	return
 
 def has_favourites():
-	drinks = os.listdir(favourite_drinks_folder)
-	if drinks:
+	recipes = os.listdir(favourite_recipes_folder)
+	if recipes:
 		return True
 	else:
 		xbmc.executebuiltin("Notification(%s,%s,%i,%s)" % (translate(32000), translate(32026),1,os.path.join(addon_path,"icon.png")))
 		return False
 		
-def is_favourite(drink_id):
-	filename = os.path.join(favourite_drinks_folder,str(drink_id) + '.txt')
+def is_favourite(recipe_id):
+	filename = os.path.join(favourite_recipes_folder,str(recipe_id) + '.txt')
 	if os.path.exists(filename): return True
 	else: return False	
 	
 def get_favourites():
-	favourite_cocktails = []
-	drinks = os.listdir(favourite_drinks_folder)
-	if drinks:
-		for drink in drinks:
-			drink_file = os.path.join(favourite_drinks_folder,drink)
-			drink_info = readfile(drink_file).split('|')
-			drink_dict = { "idDrink" : drink_info[1], "strDrink" : drink_info[0], "strDrinkThumb": drink_info[2] }
-			favourite_cocktails.append(thecocktaildb.Cocktail_lite(drink_dict ))
-	return favourite_cocktails
+	favourite_meals = []
+	recipes = os.listdir(favourite_recipes_folder)
+	if recipes:
+		for recipe in recipes:
+			recipe_file = os.path.join(favourite_recipes_folder,recipe)
+			recipe_info = readfile(recipe_file).split('|')
+			recipe_dict = { "idMeal" : recipe_info[1], "strMeal" : recipe_info[0], "strMealThumb": recipe_info[2] }
+			favourite_meals.append(themealdb.meal_lite(recipe_dict ))
+	return favourite_meals
 
 def save(filename,contents):  
 	fh = open(filename, 'w')
 	fh.write(contents)  
 	fh.close()
-     
+
 def readfile(filename):
 	f = open(filename, "r")
 	string = f.read()

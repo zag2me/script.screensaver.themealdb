@@ -1,6 +1,6 @@
 # Kodi Media Center language file
-# Addon Name: Cocktail
-# Addon id: script.screensaver.cocktail
+# Addon Name: meal
+# Addon id: script.screensaver.meal
 # Addon Provider: enen92,Zag
 msgid ""
 msgstr ""

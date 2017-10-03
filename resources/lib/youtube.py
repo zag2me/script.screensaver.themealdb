@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    script.screensaver.cocktail - A random cocktail recipe screensaver for kodi 
+    script.screensaver.meal - A random meal recipe screensaver for kodi 
     Copyright (C) 2015 enen92,Zag
 
     This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from common_cocktail import *
+from common_meal import *
 import urllib
 import json
 import re

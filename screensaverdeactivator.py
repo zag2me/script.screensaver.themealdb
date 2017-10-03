@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    script.screensaver.cocktail - A random cocktail recipe screensaver for kodi 
+    script.screensaver.meal - A random meal recipe screensaver for kodi 
     Copyright (C) 2015 enen92,Zag
 
     This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 import xbmc
 import sys
 import xbmcgui
-from resources.lib.common_cocktail import *
+from resources.lib.common_meal import *
 
 class ScreensaverPreview(xbmcgui.WindowXMLDialog):
     

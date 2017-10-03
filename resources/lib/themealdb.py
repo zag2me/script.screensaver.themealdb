@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    script.screensaver.cocktail - A random cocktail recipe screensaver for kodi 
+    script.screensaver.meal - A random meal recipe screensaver for kodi 
     Copyright (C) 2015 enen92,Zag
 
     This program is free software: you can redistribute it and/or modify
@@ -38,22 +38,22 @@ class Api:
 		
 	class Search:
 	
-		def cocktail(self,name=None):
+		def meal(self,name=None):
 			if name == None:
-				print "Error: cocktail name not provided"
+				print "Error: meal name not provided"
 				return None
 			else:				
 				url = '%s/%s/search.php?s=%s' % (API_BASE_URL,APIKEY,str(name))
 				print url
 				data = json.load(urllib2.urlopen(url))["meals"]
 				if not data:
-					print "No cocktails found"
+					print "No meals found"
 					return None
 				else:
-					cocktails = []
+					meals = []
 					for dict_ in data:
-						cocktails.append(Cocktail(dict_))
-					return cocktails
+						meals.append(meal(dict_))
+					return meals
 
 		def ingredient(self,name=None):
 			if name == None:
@@ -118,119 +118,119 @@ class Api:
 	class Filter:
 		
 		def area(self,glass):
-			cocktails = []
+			meals = []
 			url = '%s/%s/filter.php?a=%s' % (API_BASE_URL,APIKEY,glass.replace(' ','_'))
 			data = json.load(urllib2.urlopen(url))["meals"]
 			if data:
 				for dict_ in data:
-					cocktails.append(Cocktail_lite(dict_))
-			return cocktails
+					meals.append(meal_lite(dict_))
+			return meals
 			
 		def category(self,category):
-			cocktails = []
+			meals = []
 			url = '%s/%s/filter.php?c=%s' % (API_BASE_URL,APIKEY,category.replace(' ','_'))
 			data = json.load(urllib2.urlopen(url))["meals"]
 			if data:
 				for dict_ in data:
-					cocktails.append(Cocktail_lite(dict_))
-			return cocktails
+					meals.append(meal_lite(dict_))
+			return meals
 			
 		def alcohol(self,alcool):
-			cocktails = []
+			meals = []
 			url = '%s/%s/filter.php?a=%s' % (API_BASE_URL,APIKEY,alcool.replace(' ','_'))
 			data = json.load(urllib2.urlopen(url))["meals"]
 			if data:
 				for dict_ in data:
-					cocktails.append(Cocktail_lite(dict_))
-			return cocktails
+					meals.append(meal_lite(dict_))
+			return meals
 			
 		def ingredient(self,ingredient):
-			cocktails = []
+			meals = []
 			url = '%s/%s/filter.php?i=%s' % (API_BASE_URL,APIKEY,ingredient.replace(' ','_'))
 			data = json.load(urllib2.urlopen(url))["meals"]
 			if data:
 				for dict_ in data:
-					cocktails.append(Cocktail_lite(dict_))
-			return cocktails
+					meals.append(meal_lite(dict_))
+			return meals
 			
 	class Lookup:
 		
-		def cocktail(self,cocktail_id):
-			cocktails = []
-			url = '%s/%s/lookup.php?i=%s' % (API_BASE_URL,APIKEY,str(cocktail_id))
+		def meal(self,meal_id):
+			meals = []
+			url = '%s/%s/lookup.php?i=%s' % (API_BASE_URL,APIKEY,str(meal_id))
 			data = json.load(urllib2.urlopen(url))["meals"]
 			if data:
 				for dict_ in data:
-					cocktails.append(Cocktail(dict_))
-			return cocktails
+					meals.append(meal(dict_))
+			return meals
 			
 		def random(self):
-			cocktails = []
+			meals = []
 			url = '%s/%s/random.php' % (API_BASE_URL,APIKEY)
 			data = json.load(urllib2.urlopen(url))["meals"]
 			if data:
 				for dict_ in data:
-					cocktails.append(Cocktail(dict_))
-				return cocktails
+					meals.append(meal(dict_))
+				return meals
 			
 					
 			
 					
-class Cocktail:
+class meal:
 
-	def __init__(self,cocktail_dict):
-		self.id = cocktail_dict["idMeal"]
-		self.name = cocktail_dict["strMeal"]
-		self.category = cocktail_dict["strCategory"]
-		self.recipe = cocktail_dict["strInstructions"]
-		self.thumb = cocktail_dict["strMealThumb"]
-		self.ingredient1 = cocktail_dict["strIngredient1"]
-		self.ingredient2 = cocktail_dict["strIngredient2"]
-		self.ingredient3 = cocktail_dict["strIngredient3"]
-		self.ingredient4 = cocktail_dict["strIngredient4"]
-		self.ingredient5 = cocktail_dict["strIngredient5"]
-		self.ingredient6 = cocktail_dict["strIngredient6"]
-		self.ingredient7 = cocktail_dict["strIngredient7"]
-		self.ingredient8 = cocktail_dict["strIngredient8"]
-		self.ingredient9 = cocktail_dict["strIngredient9"]
-		self.ingredient10 = cocktail_dict["strIngredient10"]
-		self.ingredient11 = cocktail_dict["strIngredient11"]
-		self.ingredient12 = cocktail_dict["strIngredient12"]
-		self.ingredient13 = cocktail_dict["strIngredient13"]
-		self.ingredient14 = cocktail_dict["strIngredient14"]
-		self.ingredient15 = cocktail_dict["strIngredient15"]
-		self.ingredient16 = cocktail_dict["strIngredient16"]
-		self.ingredient17 = cocktail_dict["strIngredient17"]
-		self.ingredient18 = cocktail_dict["strIngredient18"]
-		self.ingredient19 = cocktail_dict["strIngredient19"]
-		self.ingredient20 = cocktail_dict["strIngredient20"]
-		self.measure1 = cocktail_dict["strMeasure1"]
-		self.measure2 = cocktail_dict["strMeasure2"]
-		self.measure3 = cocktail_dict["strMeasure3"]
-		self.measure4 = cocktail_dict["strMeasure4"]
-		self.measure5 = cocktail_dict["strMeasure5"]
-		self.measure6 = cocktail_dict["strMeasure6"]
-		self.measure7 = cocktail_dict["strMeasure7"]
-		self.measure8 = cocktail_dict["strMeasure8"]
-		self.measure9 = cocktail_dict["strMeasure9"]
-		self.measure10 = cocktail_dict["strMeasure10"]
-		self.measure11 = cocktail_dict["strMeasure11"]
-		self.measure12 = cocktail_dict["strMeasure12"]
-		self.measure13 = cocktail_dict["strMeasure13"]
-		self.measure14 = cocktail_dict["strMeasure14"]
-		self.measure15 = cocktail_dict["strMeasure15"]
-		self.measure16 = cocktail_dict["strMeasure16"]
-		self.measure17 = cocktail_dict["strMeasure17"]
-		self.measure18 = cocktail_dict["strMeasure18"]
-		self.measure19 = cocktail_dict["strMeasure19"]
-		self.measure20 = cocktail_dict["strMeasure20"]
+	def __init__(self,meal_dict):
+		self.id = meal_dict["idMeal"]
+		self.name = meal_dict["strMeal"]
+		self.category = meal_dict["strCategory"]
+		self.recipe = meal_dict["strInstructions"]
+		self.thumb = meal_dict["strMealThumb"]
+		self.ingredient1 = meal_dict["strIngredient1"]
+		self.ingredient2 = meal_dict["strIngredient2"]
+		self.ingredient3 = meal_dict["strIngredient3"]
+		self.ingredient4 = meal_dict["strIngredient4"]
+		self.ingredient5 = meal_dict["strIngredient5"]
+		self.ingredient6 = meal_dict["strIngredient6"]
+		self.ingredient7 = meal_dict["strIngredient7"]
+		self.ingredient8 = meal_dict["strIngredient8"]
+		self.ingredient9 = meal_dict["strIngredient9"]
+		self.ingredient10 = meal_dict["strIngredient10"]
+		self.ingredient11 = meal_dict["strIngredient11"]
+		self.ingredient12 = meal_dict["strIngredient12"]
+		self.ingredient13 = meal_dict["strIngredient13"]
+		self.ingredient14 = meal_dict["strIngredient14"]
+		self.ingredient15 = meal_dict["strIngredient15"]
+		self.ingredient16 = meal_dict["strIngredient16"]
+		self.ingredient17 = meal_dict["strIngredient17"]
+		self.ingredient18 = meal_dict["strIngredient18"]
+		self.ingredient19 = meal_dict["strIngredient19"]
+		self.ingredient20 = meal_dict["strIngredient20"]
+		self.measure1 = meal_dict["strMeasure1"]
+		self.measure2 = meal_dict["strMeasure2"]
+		self.measure3 = meal_dict["strMeasure3"]
+		self.measure4 = meal_dict["strMeasure4"]
+		self.measure5 = meal_dict["strMeasure5"]
+		self.measure6 = meal_dict["strMeasure6"]
+		self.measure7 = meal_dict["strMeasure7"]
+		self.measure8 = meal_dict["strMeasure8"]
+		self.measure9 = meal_dict["strMeasure9"]
+		self.measure10 = meal_dict["strMeasure10"]
+		self.measure11 = meal_dict["strMeasure11"]
+		self.measure12 = meal_dict["strMeasure12"]
+		self.measure13 = meal_dict["strMeasure13"]
+		self.measure14 = meal_dict["strMeasure14"]
+		self.measure15 = meal_dict["strMeasure15"]
+		self.measure16 = meal_dict["strMeasure16"]
+		self.measure17 = meal_dict["strMeasure17"]
+		self.measure18 = meal_dict["strMeasure18"]
+		self.measure19 = meal_dict["strMeasure19"]
+		self.measure20 = meal_dict["strMeasure20"]
 		
-class Cocktail_lite:
+class meal_lite:
 
-	def __init__(self,cocktail_dict):
-		self.id = cocktail_dict["idMeal"]
-		self.name = cocktail_dict["strMeal"]
-		self.thumb = cocktail_dict["strMealThumb"]
+	def __init__(self,meal_dict):
+		self.id = meal_dict["idMeal"]
+		self.name = meal_dict["strMeal"]
+		self.thumb = meal_dict["strMealThumb"]
 		
 		
 		

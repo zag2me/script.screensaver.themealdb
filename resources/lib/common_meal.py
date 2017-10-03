@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    script.screensaver.cocktail - A random cocktail recipe screensaver for kodi 
+    script.screensaver.meal - A random meal recipe screensaver for kodi 
     Copyright (C) 2015 enen92,Zag
 
     This program is free software: you can redistribute it and/or modify
@@ -20,18 +20,18 @@
 import xbmc
 import xbmcaddon
 import xbmcvfs
-import thecocktaildb
+import themealdb
 import os
 
 addon = xbmcaddon.Addon(id='script.screensaver.themealdb')
 addon_path = addon.getAddonInfo('path')
 addon_userdata = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
 addon_name = addon.getAddonInfo('name')
-cocktailsdb_api = thecocktaildb.Api('1352')
-favourite_drinks_folder = os.path.join(addon_userdata,'favourites')
+mealsdb_api = themealdb.Api('1352')
+favourite_recipes_folder = os.path.join(addon_userdata,'favourites')
 
 if not os.path.exists(addon_userdata): xbmcvfs.mkdir(addon_userdata)
-if not os.path.exists(favourite_drinks_folder): xbmcvfs.mkdir(favourite_drinks_folder)
+if not os.path.exists(favourite_recipes_folder): xbmcvfs.mkdir(favourite_recipes_folder)
 
 
 ACTION_CONTEXT_MENU = 117
