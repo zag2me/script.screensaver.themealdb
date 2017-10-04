@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.screensaver.themealdb" name="TheMealDB" version="1.0.1" provider-name="enen92,Zag">
 	<requires>
-		<import addon="xbmc.python" version="2.20.0"/>
+		<import addon="xbmc.python" version="2.25.0"/>
 	</requires>
 	<extension point="xbmc.ui.screensaver" library="screensaverdeactivator.py" />
 	<extension point="xbmc.python.script" library="interface.py" />
