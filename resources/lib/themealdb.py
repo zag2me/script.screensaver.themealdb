@@ -21,8 +21,8 @@ import json
 import urllib
 import urllib2
 
-API_BASE_URL = 'http://www.themealdb.com/api/json/v1'
-API_INGREDIENT_URL = 'http://www.themealdb.com/images/ingredients/'
+API_BASE_URL = 'https://www.themealdb.com/api/json/v1'
+API_INGREDIENT_URL = 'https://www.themealdb.com/images/ingredients/'
 
 
 class Api:
@@ -112,7 +112,7 @@ class Api:
 			data = json.load(urllib2.urlopen(url))["meals"]
 			if data:
 				for item in data:
-					if item["strIngredient1"]: return_list.append(item["strIngredient1"])
+					if item["strIngredient"]: return_list.append(item["strIngredient"])
 			return return_list
 			
 	class Filter:
